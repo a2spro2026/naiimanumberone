@@ -1,0 +1,205 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Cairo', ui-sans-serif, system-ui, sans-serif;
+    --color-naima-gold: #c59d4f;
+    --color-naima-gold-light: #d4b06a;
+    --color-naima-gold-dark: #a8843d;
+    --color-naima-green: #1b3b36;
+    --color-naima-green-dark: #0d201a;
+    --color-naima-green-deep: #122820;
+    --color-naima-cream: #f9f7f2;
+    --color-naima-ink: #1a1a1a;
+    --color-naima-muted: #6b6b6b;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: var(--font-sans);
+        background-color: var(--color-naima-cream);
+        color: var(--color-naima-ink);
+    }
+}
+
+@layer components {
+    .hero-banner {
+        width: 100%;
+        aspect-ratio: 2048 / 944;
+    }
+
+    .hero-card-cover {
+        position: absolute;
+        z-index: 5;
+        left: 2%;
+        bottom: 1%;
+        width: 49%;
+        height: 52%;
+        pointer-events: none;
+        background: #0f0805;
+        border-radius: 1rem;
+        box-shadow: 0 0 44px 30px #0f0805;
+    }
+
+    .ornate-frame {
+        position: relative;
+        border: 1.5px solid var(--color-naima-gold);
+        padding: 1rem 1.25rem;
+    }
+
+    .ornate-frame::before,
+    .ornate-frame::after {
+        content: '';
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-color: var(--color-naima-gold);
+        border-style: solid;
+    }
+
+    .ornate-frame::before {
+        top: -4px;
+        right: -4px;
+        border-width: 2px 2px 0 0;
+    }
+
+    .ornate-frame::after {
+        bottom: -4px;
+        left: -4px;
+        border-width: 0 0 2px 2px;
+    }
+
+    .section-ornament {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .section-ornament::before,
+    .section-ornament::after {
+        content: '';
+        width: 64px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--color-naima-gold), transparent);
+    }
+
+    .cat-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        transition: transform 0.25s ease, color 0.25s ease;
+    }
+
+    .cat-btn:hover {
+        transform: translateY(-4px);
+    }
+
+    .cat-btn .cat-icon {
+        width: 4.5rem;
+        height: 4.5rem;
+        border-radius: 9999px;
+        background: #fff;
+        border: 1.5px solid #e8e0d0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-naima-gold);
+        box-shadow: 0 4px 12px rgb(0 0 0 / 0.06);
+        transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .cat-btn:hover .cat-icon,
+    .cat-btn.is-active .cat-icon {
+        background: #f5edd8;
+        border-color: var(--color-naima-gold);
+        box-shadow: 0 6px 16px rgb(197 157 79 / 0.25);
+    }
+
+    .product-card {
+        background: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgb(0 0 0 / 0.08);
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .product-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 32px rgb(0 0 0 / 0.12);
+    }
+
+    .btn-gold {
+        background: var(--color-naima-gold);
+        color: #fff;
+        border-radius: 8px;
+        font-weight: 700;
+        transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-gold:hover {
+        background: var(--color-naima-gold-dark);
+        transform: translateY(-1px);
+    }
+
+    .btn-green {
+        background: var(--color-naima-green);
+        color: #fff;
+        border-radius: 8px;
+        font-weight: 700;
+        transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-green:hover {
+        background: var(--color-naima-green-dark);
+        transform: translateY(-1px);
+    }
+
+    .fade-up {
+        animation: fadeUp 0.8s ease both;
+    }
+
+    .fade-up-delay {
+        animation: fadeUp 0.8s ease 0.2s both;
+    }
+
+    .fade-up-delay-2 {
+        animation: fadeUp 0.8s ease 0.4s both;
+    }
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes lanternGlow {
+    0%,
+    100% {
+        opacity: 0.35;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+.lantern-glow {
+    animation: lanternGlow 4s ease-in-out infinite;
+}

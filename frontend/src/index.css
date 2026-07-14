@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gold: #d4af37;
+  --color-gold-light: #e8c96a;
+  --color-green: #0e4738;
+  --color-green-deep: #0a3429;
+  --color-brown: #5b3522;
+  --color-ink: #101010;
+  --color-beige: #f8f4ed;
+  --color-cream: #f3ebe0;
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Manrope", system-ui, sans-serif;
+  --font-arabic: "Aref Ruqaa", "Traditional Arabic", serif;
+  --radius-card: 1.25rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-beige font-sans text-ink antialiased;
+  }
+
+  ::selection {
+    @apply bg-gold/30 text-ink;
+  }
+}
+
+@layer utilities {
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #f0d78c 0%, #d4af37 45%, #a88420 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .font-arabic {
+    font-family: var(--font-arabic);
+  }
+
+  .slogan-ar {
+    font-family: var(--font-arabic);
+    direction: rtl;
+    text-align: center;
+    line-height: 1.55;
+    letter-spacing: 0.01em;
+    background: linear-gradient(135deg, #f5e6b8 0%, #d4af37 40%, #c9a227 70%, #f0d78c 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 40px rgba(212, 175, 55, 0.25);
+  }
+
+  .glass {
+    @apply border border-white/15 bg-white/10 backdrop-blur-md;
+  }
+
+  .ornate-frame {
+    position: relative;
+    border: 1px solid color-mix(in srgb, var(--color-gold) 70%, transparent);
+    border-radius: 0.75rem;
+  }
+
+  .ornate-frame::before,
+  .ornate-frame::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: var(--color-gold);
+    border-style: solid;
+  }
+
+  .ornate-frame::before {
+    top: -3px;
+    left: -3px;
+    border-width: 2px 0 0 2px;
+  }
+
+  .ornate-frame::after {
+    right: -3px;
+    bottom: -3px;
+    border-width: 0 2px 2px 0;
+  }
+
+  .zellige-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23d4af37' fill-opacity='0.06'%3E%3Cpath d='M30 0l6 12H24L30 0zm0 60l-6-12h12L30 60zM0 30l12-6v12L0 30zm60 0l-12 6V24L60 30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+}
