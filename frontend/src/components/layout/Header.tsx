@@ -68,7 +68,7 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <Button asChild variant="outline" size="sm" className="hidden border-gold/50 text-gold hover:bg-gold/10 sm:inline-flex">
-            <Link to="/admin">
+            <Link to="/admin/login">
               <Shield className="h-4 w-4" />
               Admin
             </Link>
@@ -138,7 +138,7 @@ export function Header() {
                 </motion.a>
               ))}
               <Button asChild variant="outline" size="lg" className="mt-4 border-gold/50 text-gold">
-                <Link to="/admin" onClick={() => setMobileOpen(false)}>
+                <Link to="/admin/login" onClick={() => setMobileOpen(false)}>
                   <Shield className="h-4 w-4" />
                   Admin
                 </Link>

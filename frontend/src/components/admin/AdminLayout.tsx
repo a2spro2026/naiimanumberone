@@ -1,12 +1,14 @@
-import { NavLink, Outlet, Link } from 'react-router-dom'
+import { NavLink, Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   Building2,
   CalendarDays,
   CalendarRange,
+  ChevronDown,
   Menu,
   Package,
+  Palette,
   Settings,
   Shield,
   Truck,
@@ -15,9 +17,11 @@ import {
   X,
   LayoutDashboard,
   ArrowLeft,
+  LogOut,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { useAuth } from '@/context/AuthContext'
 
 const adminLinks = [
   { to: '/admin', label: 'Tableau de bord', icon: LayoutDashboard, end: true },
@@ -27,11 +31,19 @@ const adminLinks = [
   { to: '/admin/calendrier', label: 'Calendrier', icon: CalendarDays },
   { to: '/admin/reservations', label: 'Réservations', icon: CalendarRange },
   { to: '/admin/collaborateurs', label: 'Collaborateurs', icon: UsersRound },
-  { to: '/admin/configuration', label: 'Configuration', icon: Settings },
 ]
 
 export function AdminLayout() {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { logout } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const configOpen = location.pathname.startsWith('/admin/configuration')
+
+  const handleLogout = () => {
+    logout()
+    navigate('/admin/login', { replace: true })
+  }
 
   const nav = (
     <nav className="flex flex-1 flex-col gap-1 px-3 py-4">
@@ -54,6 +66,45 @@ export function AdminLayout() {
           {label}
         </NavLink>
       ))}
+
+      <div className="mt-1">
+        <NavLink
+          to="/admin/configuration"
+          end
+          onClick={() => setMobileOpen(false)}
+          className={({ isActive }) =>
+            cn(
+              'flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium transition-all duration-300',
+              isActive
+                ? 'bg-gold text-ink shadow-[0_8px_24px_rgba(212,175,55,0.35)]'
+                : 'text-beige/75 hover:bg-white/5 hover:text-gold',
+            )
+          }
+        >
+          <Settings className="h-4 w-4 shrink-0" strokeWidth={1.75} />
+          <span className="flex-1">Configuration</span>
+          <ChevronDown
+            className={cn('h-4 w-4 transition-transform', configOpen && 'rotate-180')}
+          />
+        </NavLink>
+        <div className="mt-1 ml-4 space-y-1 border-l border-white/10 pl-3">
+            <NavLink
+              to="/admin/configuration/habillage"
+              onClick={() => setMobileOpen(false)}
+              className={({ isActive }) =>
+                cn(
+                  'flex items-center gap-3 rounded-2xl px-3 py-2 text-sm font-medium transition-all duration-300',
+                  isActive
+                    ? 'bg-gold/90 text-ink'
+                    : 'text-beige/70 hover:bg-white/5 hover:text-gold',
+                )
+              }
+            >
+              <Palette className="h-4 w-4 shrink-0" strokeWidth={1.75} />
+              Habillage
+            </NavLink>
+          </div>
+      </div>
     </nav>
   )
 
@@ -71,12 +122,21 @@ export function AdminLayout() {
           </div>
         </div>
         {nav}
-        <div className="border-t border-white/10 p-4">
+        <div className="space-y-2 border-t border-white/10 p-4">
           <Button asChild variant="outline" className="w-full border-gold/40 text-gold hover:bg-gold/10">
             <Link to="/">
               <ArrowLeft className="h-4 w-4" />
               Retour au site
             </Link>
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            className="w-full text-beige/80 hover:bg-white/10 hover:text-beige"
+            onClick={handleLogout}
+          >
+            <LogOut className="h-4 w-4" />
+            Déconnexion
           </Button>
         </div>
       </aside>
@@ -142,11 +202,23 @@ export function AdminLayout() {
                 </Button>
               </div>
               {nav}
-              <div className="border-t border-white/10 p-4">
+              <div className="space-y-2 border-t border-white/10 p-4">
                 <Button asChild variant="gold" className="w-full">
                   <Link to="/" onClick={() => setMobileOpen(false)}>
                     Retour au site
                   </Link>
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="w-full text-beige/80 hover:bg-white/10"
+                  onClick={() => {
+                    setMobileOpen(false)
+                    handleLogout()
+                  }}
+                >
+                  <LogOut className="h-4 w-4" />
+                  Déconnexion
                 </Button>
               </div>
             </motion.aside>

@@ -1,11 +1,13 @@
 import { Reveal } from '@/components/Reveal'
-import { categories } from '@/data/content'
+import { useCatalog } from '@/context/CatalogContext'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { FreeMode } from 'swiper/modules'
 import 'swiper/css'
 import 'swiper/css/free-mode'
 
 export function Categories() {
+  const { categories } = useCatalog()
+
   return (
     <section id="categories" className="bg-beige py-16 lg:py-20">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">

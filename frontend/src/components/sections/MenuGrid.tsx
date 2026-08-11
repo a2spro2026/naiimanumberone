@@ -2,11 +2,12 @@ import { Clock, Star } from 'lucide-react'
 import { Reveal } from '@/components/Reveal'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/context/CartContext'
-import { dishes } from '@/data/content'
+import { useCatalog } from '@/context/CatalogContext'
 import { formatPrice } from '@/lib/utils'
 
 export function MenuGrid() {
   const { addItem } = useCart()
+  const { dishes } = useCatalog()
 
   return (
     <section id="menu" className="bg-cream py-16 lg:py-24">

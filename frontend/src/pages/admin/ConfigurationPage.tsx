@@ -1,4 +1,5 @@
-import { Settings } from 'lucide-react'
+import { Palette, Settings } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 
 export function ConfigurationPage() {
@@ -61,6 +62,22 @@ export function ConfigurationPage() {
           </div>
         </section>
       </div>
+
+      <Link
+        to="/admin/configuration/habillage"
+        className="flex items-center justify-between rounded-[20px] border border-gold/30 bg-white p-5 shadow-sm transition hover:border-gold"
+      >
+        <div className="flex items-center gap-3">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gold/15 text-gold">
+            <Palette className="h-5 w-5" />
+          </span>
+          <div>
+            <p className="font-display text-xl text-ink">Habillage</p>
+            <p className="text-sm text-brown/70">Photos et titres des catégories et du menu.</p>
+          </div>
+        </div>
+        <span className="text-sm font-semibold text-gold">Ouvrir →</span>
+      </Link>
 
       <Button variant="gold">Enregistrer les paramètres</Button>
     </div>

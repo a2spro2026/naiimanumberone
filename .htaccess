@@ -1,0 +1,22 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Do not expose sensitive files
+    RewriteRule ^(\.env|\.git) - [F,L]
+
+    # Already inside /public — continue
+    RewriteCond %{REQUEST_URI} ^/public/
+    RewriteRule ^ - [L]
+
+    # Send every other request to the Laravel public folder
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+
+<IfModule mod_authz_core.c>
+    <FilesMatch "^\.env">
+        Require all denied
+    </FilesMatch>
+</IfModule>
+
+DirectoryIndex index.php
+Options -Indexes
