@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import { useForm } from 'react-hook-form'
 import { Clock3, Mail, MapPin, Phone, Send, Share2 } from 'lucide-react'
+import { Bi, BiLabel, SectionHeading } from '@/components/Bi'
 import { Reveal } from '@/components/Reveal'
 import { Button } from '@/components/ui/button'
+import { CONTACT_PHONE, CONTACT_PHONE_DISPLAY, WHATSAPP_URL } from '@/data/content'
 
 type ContactForm = {
   name: string
@@ -10,6 +12,51 @@ type ContactForm = {
   phone: string
   eventType: string
   message: string
+}
+
+const eventTypes = [
+  { fr: 'Mariage', ar: 'عرس' },
+  { fr: 'Fiançailles', ar: 'خطوبة' },
+  { fr: 'Anniversaire', ar: 'عيد ميلاد' },
+  { fr: 'Baptême', ar: 'عقيقة' },
+  { fr: 'Entreprise', ar: 'شركة' },
+  { fr: 'Réception', ar: 'حفل خاص' },
+  { fr: 'Traiteur VIP', ar: 'خدمة VIP' },
+  { fr: 'Autre', ar: 'أخرى' },
+]
+
+const inputClass =
+  'w-full rounded-2xl border border-brown/15 bg-beige/50 px-4 py-3 text-sm outline-none transition focus:border-gold'
+
+function FieldLabel({ ar, fr }: { ar: string; fr: string }) {
+  return (
+    <span className="mb-1.5 block text-base font-semibold text-brown">
+      <Bi ar={ar} fr={fr} frClassName="mt-0 text-xs font-medium" />
+    </span>
+  )
+}
+
+function FieldError({ show, ar, fr }: { show: boolean; ar: string; fr: string }) {
+  if (!show) return null
+  return (
+    <p className="mt-1 text-sm text-red-600">
+      <Bi ar={ar} fr={fr} frClassName="mt-0 text-xs" />
+    </p>
+  )
+}
+
+function InfoItem({ icon, ar, fr, children }: { icon: ReactNode; ar: string; fr: string; children: ReactNode }) {
+  return (
+    <li className="flex items-start gap-3">
+      <span className="mt-0.5 text-gold">{icon}</span>
+      <div>
+        <p className="font-semibold">
+          <Bi ar={ar} fr={fr} frClassName="mt-0 text-[0.8em] font-medium" />
+        </p>
+        <div className="mt-1 text-beige/80">{children}</div>
+      </div>
+    </li>
+  )
 }
 
 export function Contact() {
@@ -31,69 +78,52 @@ export function Contact() {
     <section id="contact" className="bg-cream py-16 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
         <Reveal>
-          <p className="text-center text-xs font-semibold uppercase tracking-[0.25em] text-brown">
-            Contact
-          </p>
-          <h2 className="mt-3 text-center font-display text-3xl text-green sm:text-4xl lg:text-5xl">
-            Planifions votre événement
-          </h2>
+          <SectionHeading
+            eyebrowAr="اتصل بنا"
+            eyebrow="Contact"
+            titleAr="لنخطط لمناسبتكم"
+            title="Planifions votre événement"
+          />
         </Reveal>
 
         <Reveal className="mt-12" delay={0.08}>
           <div className="grid overflow-hidden rounded-[20px] bg-white shadow-[0_20px_60px_rgba(16,16,16,0.08)] lg:grid-cols-2">
-            <div className="bg-green p-8 text-beige lg:p-10">
+            <div dir="rtl" className="bg-green p-6 text-beige sm:p-8 lg:p-10">
               <h3 className="font-display text-3xl text-gold">NA3IMA-numberONE</h3>
               <p className="mt-3 max-w-sm text-beige/75">
-                Cuisine marocaine d&apos;exception pour particuliers et événements.
+                <Bi
+                  ar="طبخ مغربي استثنائي للأفراد وللمناسبات."
+                  fr="Cuisine marocaine d'exception pour particuliers et événements."
+                  frClassName="text-[0.85em]"
+                />
               </p>
 
               <ul className="mt-8 space-y-5 text-sm">
-                <li className="flex items-start gap-3">
-                  <Phone className="mt-0.5 h-5 w-5 text-gold" />
-                  <div>
-                    <p className="font-semibold">Téléphone</p>
-                    <a href="tel:+212600000000" className="text-beige/80 hover:text-gold">
-                      +212 6 00 00 00 00
-                    </a>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Send className="mt-0.5 h-5 w-5 text-gold" />
-                  <div>
-                    <p className="font-semibold">WhatsApp</p>
-                    <a
-                      href="https://wa.me/212600000000"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-beige/80 hover:text-gold"
-                    >
-                      Discutez avec nous
-                    </a>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Mail className="mt-0.5 h-5 w-5 text-gold" />
-                  <div>
-                    <p className="font-semibold">Email</p>
-                    <a href="mailto:contact@na3ima.ma" className="text-beige/80 hover:text-gold">
-                      contact@na3ima.ma
-                    </a>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <MapPin className="mt-0.5 h-5 w-5 text-gold" />
-                  <div>
-                    <p className="font-semibold">Adresse</p>
-                    <p className="text-beige/80">Casablanca, Maroc</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Clock3 className="mt-0.5 h-5 w-5 text-gold" />
-                  <div>
-                    <p className="font-semibold">Horaires</p>
-                    <p className="text-beige/80">Lun–Dim · 09:00 – 23:00</p>
-                  </div>
-                </li>
+                <InfoItem icon={<Phone className="h-5 w-5" />} ar="الهاتف" fr="Téléphone">
+                  <a href={`tel:${CONTACT_PHONE}`} dir="ltr" className="hover:text-gold">
+                    {CONTACT_PHONE_DISPLAY}
+                  </a>
+                </InfoItem>
+                <InfoItem icon={<Send className="h-5 w-5" />} ar="واتساب" fr="WhatsApp">
+                  <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="hover:text-gold">
+                    <Bi ar="تواصلوا معنا" fr="Discutez avec nous" frClassName="mt-0 text-[0.9em]" />
+                  </a>
+                </InfoItem>
+                <InfoItem icon={<Mail className="h-5 w-5" />} ar="البريد الإلكتروني" fr="Email">
+                  <a href="mailto:contact@na3ima.ma" className="hover:text-gold">
+                    contact@na3ima.ma
+                  </a>
+                </InfoItem>
+                <InfoItem icon={<MapPin className="h-5 w-5" />} ar="العنوان" fr="Adresse">
+                  <Bi ar="الدار البيضاء، المغرب" fr="Casablanca, Maroc" frClassName="mt-0 text-[0.9em]" />
+                </InfoItem>
+                <InfoItem icon={<Clock3 className="h-5 w-5" />} ar="أوقات العمل" fr="Horaires">
+                  <Bi
+                    ar="من الإثنين إلى الأحد · 09:00 – 23:00"
+                    fr="Lun–Dim · 09:00 – 23:00"
+                    frClassName="mt-0 text-[0.9em]"
+                  />
+                </InfoItem>
               </ul>
 
               <div className="mt-8 flex gap-3">
@@ -117,77 +147,85 @@ export function Contact() {
               </div>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-8 lg:p-10">
-              <h3 className="font-display text-2xl text-ink">Demande de devis</h3>
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-6 sm:p-8 lg:p-10">
+              <h3 className="font-display text-2xl font-bold text-ink">
+                <Bi ar="طلب عرض سعر" fr="Demande de devis" frClassName="text-[0.75em] font-semibold" />
+              </h3>
               {sent && (
                 <p className="rounded-xl bg-green/10 px-4 py-3 text-sm text-green">
-                  Merci ! Nous vous recontactons très vite.
+                  <Bi
+                    ar="شكراً! سنتصل بكم قريباً."
+                    fr="Merci ! Nous vous recontactons très vite."
+                    frClassName="text-[0.9em]"
+                  />
                 </p>
               )}
-              <div>
-                <label className="mb-1.5 block text-sm font-medium text-brown">Nom</label>
+              <label className="block">
+                <FieldLabel ar="الاسم" fr="Nom" />
                 <input
-                  className="w-full rounded-2xl border border-brown/15 bg-beige/50 px-4 py-3 text-sm outline-none transition focus:border-gold"
-                  {...register('name', { required: 'Nom requis' })}
+                  autoComplete="name"
+                  className={inputClass}
+                  {...register('name', { required: true })}
                 />
-                {errors.name && <p className="mt-1 text-xs text-red-600">{errors.name.message}</p>}
-              </div>
+                <FieldError show={!!errors.name} ar="الاسم مطلوب" fr="Nom requis" />
+              </label>
               <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label className="mb-1.5 block text-sm font-medium text-brown">Email</label>
+                <label className="block">
+                  <FieldLabel ar="البريد الإلكتروني" fr="Email" />
                   <input
                     type="email"
-                    className="w-full rounded-2xl border border-brown/15 bg-beige/50 px-4 py-3 text-sm outline-none transition focus:border-gold"
-                    {...register('email', { required: 'Email requis' })}
+                    autoComplete="email"
+                    inputMode="email"
+                    className={inputClass}
+                    {...register('email', { required: true })}
                   />
-                  {errors.email && (
-                    <p className="mt-1 text-xs text-red-600">{errors.email.message}</p>
-                  )}
-                </div>
-                <div>
-                  <label className="mb-1.5 block text-sm font-medium text-brown">Téléphone</label>
+                  <FieldError show={!!errors.email} ar="البريد مطلوب" fr="Email requis" />
+                </label>
+                <label className="block">
+                  <FieldLabel ar="الهاتف" fr="Téléphone" />
                   <input
-                    className="w-full rounded-2xl border border-brown/15 bg-beige/50 px-4 py-3 text-sm outline-none transition focus:border-gold"
-                    {...register('phone', { required: 'Téléphone requis' })}
+                    type="tel"
+                    autoComplete="tel"
+                    inputMode="tel"
+                    className={inputClass}
+                    {...register('phone', { required: true })}
                   />
-                  {errors.phone && (
-                    <p className="mt-1 text-xs text-red-600">{errors.phone.message}</p>
-                  )}
-                </div>
+                  <FieldError show={!!errors.phone} ar="الهاتف مطلوب" fr="Téléphone requis" />
+                </label>
               </div>
-              <div>
-                <label className="mb-1.5 block text-sm font-medium text-brown">Type d&apos;événement</label>
+              <label className="block">
+                <FieldLabel ar="نوع المناسبة" fr="Type d'événement" />
                 <select
-                  className="w-full rounded-2xl border border-brown/15 bg-beige/50 px-4 py-3 text-sm outline-none transition focus:border-gold"
+                  className={inputClass}
                   {...register('eventType', { required: true })}
                   defaultValue=""
                 >
                   <option value="" disabled>
-                    Sélectionnez…
+                    اختاروا… — Sélectionnez…
                   </option>
-                  <option>Mariage</option>
-                  <option>Fiançailles</option>
-                  <option>Anniversaire</option>
-                  <option>Baptême</option>
-                  <option>Entreprise</option>
-                  <option>Réception</option>
-                  <option>Traiteur VIP</option>
-                  <option>Autre</option>
+                  {eventTypes.map((t) => (
+                    <option key={t.fr} value={t.fr}>
+                      {t.ar} — {t.fr}
+                    </option>
+                  ))}
                 </select>
-              </div>
-              <div>
-                <label className="mb-1.5 block text-sm font-medium text-brown">Message</label>
+                <FieldError show={!!errors.eventType} ar="اختاروا نوع المناسبة" fr="Choisissez un type" />
+              </label>
+              <label className="block">
+                <FieldLabel ar="الرسالة" fr="Message" />
                 <textarea
                   rows={4}
-                  className="w-full resize-none rounded-2xl border border-brown/15 bg-beige/50 px-4 py-3 text-sm outline-none transition focus:border-gold"
-                  {...register('message', { required: 'Message requis' })}
+                  className={`${inputClass} resize-none`}
+                  {...register('message', { required: true })}
                 />
-                {errors.message && (
-                  <p className="mt-1 text-xs text-red-600">{errors.message.message}</p>
+                <FieldError show={!!errors.message} ar="الرسالة مطلوبة" fr="Message requis" />
+              </label>
+              <Button type="submit" variant="gold" size="lg" className="h-16 w-full" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <BiLabel ar="جارٍ الإرسال…" fr="Envoi…" />
+                ) : (
+                  <BiLabel ar="إرسال الطلب" fr="Envoyer la demande" />
                 )}
-              </div>
-              <Button type="submit" variant="gold" size="lg" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? 'Envoi…' : 'Envoyer la demande'}
               </Button>
             </form>
           </div>

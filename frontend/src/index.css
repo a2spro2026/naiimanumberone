@@ -9,8 +9,9 @@
   --color-ink: #101010;
   --color-beige: #f8f4ed;
   --color-cream: #f3ebe0;
-  --font-display: "Cormorant Garamond", Georgia, serif;
-  --font-sans: "Manrope", system-ui, sans-serif;
+  /* Latin fonts first; browsers fall back to Amiri / Cairo for Arabic glyphs. */
+  --font-display: "Cormorant Garamond", "Amiri", Georgia, serif;
+  --font-sans: "Manrope", "Cairo", system-ui, sans-serif;
   --font-arabic: "Aref Ruqaa", "Traditional Arabic", serif;
   --radius-card: 1.25rem;
 }
@@ -18,10 +19,36 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
   }
 
   body {
     @apply bg-beige font-sans text-ink antialiased;
+    overflow-x: clip;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* iOS Safari zooms on focus when a field's font-size is below 16px. */
+  @media (max-width: 767px) {
+    input,
+    select,
+    textarea {
+      font-size: 16px !important;
+    }
+  }
+
+  button,
+  a,
+  label {
+    touch-action: manipulation;
+  }
+
+  /* Our own eye toggle replaces Edge's native password reveal button. */
+  input::-ms-reveal,
+  input::-ms-clear {
+    display: none;
   }
 
   ::selection {
@@ -44,7 +71,6 @@
   .slogan-ar {
     font-family: var(--font-arabic);
     direction: rtl;
-    text-align: center;
     line-height: 1.55;
     letter-spacing: 0.01em;
     background: linear-gradient(135deg, #f5e6b8 0%, #d4af37 40%, #c9a227 70%, #f0d78c 100%);
@@ -84,6 +110,18 @@
     right: -3px;
     bottom: -3px;
     border-width: 0 2px 2px 0;
+  }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pb-safe-4 {
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
   }
 
   .zellige-pattern {

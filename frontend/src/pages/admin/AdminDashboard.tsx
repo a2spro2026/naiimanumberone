@@ -82,7 +82,7 @@ export function AdminDashboard() {
             <Reveal key={card.to} delay={i * 0.04}>
               <Link
                 to={card.to}
-                className="group flex h-full flex-col rounded-[20px] border border-brown/10 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_16px_40px_rgba(16,16,16,0.08)]"
+                className="group flex h-full flex-col rounded-[20px] border border-brown/10 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-gold/40 hover:shadow-[0_16px_40px_rgba(16,16,16,0.08)] active:scale-[0.99] sm:p-6"
               >
                 <span className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-green/10 text-green transition-colors group-hover:bg-gold/15 group-hover:text-brown">
                   <Icon className="h-5 w-5" />

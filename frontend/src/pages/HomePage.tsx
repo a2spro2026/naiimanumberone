@@ -1,8 +1,7 @@
 import { Header, CartDrawer } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
+import { MobileActionBar } from '@/components/layout/MobileActionBar'
 import { Hero } from '@/components/sections/Hero'
-import { Advantages } from '@/components/sections/Advantages'
-import { Categories } from '@/components/sections/Categories'
 import { MenuGrid } from '@/components/sections/MenuGrid'
 import { Events } from '@/components/sections/Events'
 import { WhyUs } from '@/components/sections/WhyUs'
@@ -18,8 +17,6 @@ export function HomePage() {
       <CartDrawer />
       <main>
         <Hero />
-        <Advantages />
-        <Categories />
         <MenuGrid />
         <Events />
         <WhyUs />
@@ -29,6 +26,7 @@ export function HomePage() {
         <Contact />
       </main>
       <Footer />
+      <MobileActionBar />
     </>
   )
 }

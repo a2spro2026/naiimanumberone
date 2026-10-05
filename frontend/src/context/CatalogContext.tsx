@@ -2,90 +2,121 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from 'react'
-import {
-  categories as defaultCategories,
-  dishes as defaultDishes,
-  type Category,
-  type Dish,
-} from '@/data/content'
+import { categories as defaultCategories, type Category, type Dish } from '@/data/content'
+import { api, request } from '@/lib/api'
 
 const STORAGE_KEY = 'na3ima-catalog'
 
-type CatalogState = {
+type CategoryPatch = Partial<Pick<Category, 'name' | 'nameAr' | 'image'>>
+
+type CatalogContextValue = {
   categories: Category[]
   dishes: Dish[]
-}
-
-type CatalogContextValue = CatalogState & {
-  updateCategory: (id: string, patch: Partial<Pick<Category, 'name' | 'image'>>) => void
-  updateDish: (id: string, patch: Partial<Pick<Dish, 'name' | 'image'>>) => void
-  resetCatalog: () => void
+  dishesLoading: boolean
+  dishesError: string
+  reloadDishes: () => Promise<void>
+  createDish: (data: FormData) => Promise<Dish>
+  saveDish: (id: string, data: FormData) => Promise<Dish>
+  deleteDish: (id: string) => Promise<void>
+  updateCategory: (id: string, patch: CategoryPatch) => void
+  resetCategories: () => void
 }
 
 const CatalogContext = createContext<CatalogContextValue | null>(null)
 
-function loadCatalog(): CatalogState {
+/** Categories are still stored in the browser; fills fields added after they were saved. */
+function loadCategories(): Category[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return { categories: defaultCategories, dishes: defaultDishes }
-    const parsed = JSON.parse(raw) as Partial<CatalogState>
-    return {
-      categories: parsed.categories?.length ? parsed.categories : defaultCategories,
-      dishes: parsed.dishes?.length ? parsed.dishes : defaultDishes,
-    }
+    const stored = raw ? (JSON.parse(raw) as { categories?: Partial<Category>[] }).categories : undefined
+    if (!stored?.length) return defaultCategories
+    return stored.map((item) => ({ ...defaultCategories.find((d) => d.id === item.id), ...item }) as Category)
   } catch {
-    return { categories: defaultCategories, dishes: defaultDishes }
+    return defaultCategories
+  }
+}
+
+function persistCategories(categories: Category[]) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ categories }))
+  } catch {
+    window.alert(
+      "Espace de stockage du navigateur plein : la dernière photo n'a pas pu être enregistrée. Utilisez une image plus légère.",
+    )
   }
 }
 
 export function CatalogProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<CatalogState>(loadCatalog)
+  const [categories, setCategories] = useState<Category[]>(loadCategories)
+  const [dishes, setDishes] = useState<Dish[]>([])
+  const [dishesLoading, setDishesLoading] = useState(true)
+  const [dishesError, setDishesError] = useState('')
 
-  const persist = useCallback((next: CatalogState) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
-    return next
+  const reloadDishes = useCallback(async () => {
+    setDishesError('')
+    try {
+      const data = await request<{ dishes: Dish[] }>('/api/dishes')
+      setDishes(data.dishes)
+    } catch {
+      setDishesError('Impossible de charger le menu pour le moment.')
+    } finally {
+      setDishesLoading(false)
+    }
   }, [])
 
-  const updateCategory = useCallback(
-    (id: string, patch: Partial<Pick<Category, 'name' | 'image'>>) => {
-      setState((prev) =>
-        persist({
-          ...prev,
-          categories: prev.categories.map((c) => (c.id === id ? { ...c, ...patch } : c)),
-        }),
-      )
-    },
-    [persist],
-  )
+  useEffect(() => {
+    reloadDishes()
+  }, [reloadDishes])
 
-  const updateDish = useCallback(
-    (id: string, patch: Partial<Pick<Dish, 'name' | 'image'>>) => {
-      setState((prev) =>
-        persist({
-          ...prev,
-          dishes: prev.dishes.map((d) => (d.id === id ? { ...d, ...patch } : d)),
-        }),
-      )
-    },
-    [persist],
-  )
+  const createDish = useCallback(async (data: FormData) => {
+    const { dish } = await api<{ dish: Dish }>('/dishes', { method: 'POST', body: data })
+    setDishes((list) => [...list, dish])
+    return dish
+  }, [])
 
-  const resetCatalog = useCallback(() => {
-    setState(persist({ categories: defaultCategories, dishes: defaultDishes }))
-  }, [persist])
+  const saveDish = useCallback(async (id: string, data: FormData) => {
+    const { dish } = await api<{ dish: Dish }>(`/dishes/${id}`, { method: 'POST', body: data })
+    setDishes((list) => list.map((d) => (d.id === id ? dish : d)))
+    return dish
+  }, [])
+
+  const deleteDish = useCallback(async (id: string) => {
+    await api(`/dishes/${id}`, { method: 'DELETE' })
+    setDishes((list) => list.filter((d) => d.id !== id))
+  }, [])
+
+  const updateCategory = useCallback((id: string, patch: CategoryPatch) => {
+    setCategories((prev) => {
+      const next = prev.map((c) => (c.id === id ? { ...c, ...patch } : c))
+      persistCategories(next)
+      return next
+    })
+  }, [])
+
+  const resetCategories = useCallback(() => {
+    persistCategories(defaultCategories)
+    setCategories(defaultCategories)
+  }, [])
 
   const value = useMemo(
     () => ({
-      ...state,
+      categories,
+      dishes,
+      dishesLoading,
+      dishesError,
+      reloadDishes,
+      createDish,
+      saveDish,
+      deleteDish,
       updateCategory,
-      updateDish,
-      resetCatalog,
+      resetCategories,
     }),
-    [state, updateCategory, updateDish, resetCatalog],
+    [categories, dishes, dishesLoading, dishesError, reloadDishes, createDish, saveDish, deleteDish, updateCategory, resetCategories],
   )
 
   return <CatalogContext.Provider value={value}>{children}</CatalogContext.Provider>

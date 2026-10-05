@@ -1,8 +1,11 @@
-import { Palette, Settings } from 'lucide-react'
+import { Palette, Settings, UserCog } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { useAuth } from '@/context/AuthContext'
 
 export function ConfigurationPage() {
+  const { user } = useAuth()
+
   return (
     <div className="space-y-6">
       <div>
@@ -30,6 +33,8 @@ export function ConfigurationPage() {
             <label className="block text-sm">
               <span className="mb-1.5 block font-medium text-brown">Téléphone</span>
               <input
+                type="tel"
+                inputMode="tel"
                 defaultValue="+212 6 00 00 00 00"
                 className="w-full rounded-2xl border border-brown/15 bg-beige/50 px-4 py-2.5 outline-none focus:border-gold"
               />
@@ -37,6 +42,8 @@ export function ConfigurationPage() {
             <label className="block text-sm">
               <span className="mb-1.5 block font-medium text-brown">Email</span>
               <input
+                type="email"
+                inputMode="email"
                 defaultValue="contact@na3ima.ma"
                 className="w-full rounded-2xl border border-brown/15 bg-beige/50 px-4 py-2.5 outline-none focus:border-gold"
               />
@@ -65,9 +72,9 @@ export function ConfigurationPage() {
 
       <Link
         to="/admin/configuration/habillage"
-        className="flex items-center justify-between rounded-[20px] border border-gold/30 bg-white p-5 shadow-sm transition hover:border-gold"
+        className="flex items-center justify-between gap-3 rounded-[20px] border border-gold/30 bg-white p-4 shadow-sm transition hover:border-gold sm:p-5"
       >
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-3">
           <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gold/15 text-gold">
             <Palette className="h-5 w-5" />
           </span>
@@ -76,10 +83,30 @@ export function ConfigurationPage() {
             <p className="text-sm text-brown/70">Photos et titres des catégories et du menu.</p>
           </div>
         </div>
-        <span className="text-sm font-semibold text-gold">Ouvrir →</span>
+        <span className="shrink-0 text-sm font-semibold text-gold">Ouvrir →</span>
       </Link>
 
-      <Button variant="gold">Enregistrer les paramètres</Button>
+      {user?.isAdmin && (
+        <Link
+          to="/admin/configuration/utilisateurs"
+          className="flex items-center justify-between gap-3 rounded-[20px] border border-gold/30 bg-white p-4 shadow-sm transition hover:border-gold sm:p-5"
+        >
+          <div className="flex min-w-0 items-center gap-3">
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gold/15 text-gold">
+              <UserCog className="h-5 w-5" />
+            </span>
+            <div>
+              <p className="font-display text-xl text-ink">Utilisateurs</p>
+              <p className="text-sm text-brown/70">Comptes, statuts et accès à l’espace admin.</p>
+            </div>
+          </div>
+          <span className="shrink-0 text-sm font-semibold text-gold">Ouvrir →</span>
+        </Link>
+      )}
+
+      <Button variant="gold" className="w-full sm:w-auto">
+        Enregistrer les paramètres
+      </Button>
     </div>
   )
 }

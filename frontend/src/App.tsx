@@ -1,47 +1,32 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { CartProvider } from '@/context/CartContext'
-import { AuthProvider } from '@/context/AuthContext'
 import { CatalogProvider } from '@/context/CatalogContext'
 import { HomePage } from '@/pages/HomePage'
-import { AdminLayout } from '@/components/admin/AdminLayout'
-import { ProtectedAdminRoute } from '@/components/admin/ProtectedAdminRoute'
-import { AdminLoginPage } from '@/pages/admin/AdminLoginPage'
-import { AdminDashboard } from '@/pages/admin/AdminDashboard'
-import { FournisseursPage } from '@/pages/admin/FournisseursPage'
-import { StockPage } from '@/pages/admin/StockPage'
-import { ClientsPage } from '@/pages/admin/ClientsPage'
-import { CalendrierPage } from '@/pages/admin/CalendrierPage'
-import { ReservationsPage } from '@/pages/admin/ReservationsPage'
-import { CollaborateursPage } from '@/pages/admin/CollaborateursPage'
-import { ConfigurationPage } from '@/pages/admin/ConfigurationPage'
-import { HabillagePage } from '@/pages/admin/HabillagePage'
+
+const AdminRoutes = lazy(() => import('@/pages/admin/AdminRoutes'))
+
+function PageLoader() {
+  return (
+    <div className="flex min-h-svh items-center justify-center bg-ink">
+      <span className="h-10 w-10 animate-spin rounded-full border-2 border-gold/30 border-t-gold" />
+    </div>
+  )
+}
 
 export default function App() {
   return (
-    <AuthProvider>
-      <CatalogProvider>
+    <CatalogProvider>
       <CartProvider>
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/admin/login" element={<AdminLoginPage />} />
-            <Route element={<ProtectedAdminRoute />}>
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<AdminDashboard />} />
-                <Route path="fournisseurs" element={<FournisseursPage />} />
-                <Route path="stock" element={<StockPage />} />
-                <Route path="clients" element={<ClientsPage />} />
-                <Route path="calendrier" element={<CalendrierPage />} />
-                <Route path="reservations" element={<ReservationsPage />} />
-                <Route path="collaborateurs" element={<CollaborateursPage />} />
-                <Route path="configuration" element={<ConfigurationPage />} />
-                <Route path="configuration/habillage" element={<HabillagePage />} />
-              </Route>
-            </Route>
-          </Routes>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/admin/*" element={<AdminRoutes />} />
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </CartProvider>
-      </CatalogProvider>
-    </AuthProvider>
+    </CatalogProvider>
   )
 }

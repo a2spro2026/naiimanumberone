@@ -33,13 +33,13 @@ export function AdminModulePage({
           <h1 className="font-display text-3xl text-green sm:text-4xl">{title}</h1>
           <p className="mt-2 max-w-2xl text-sm text-brown/70">{description}</p>
         </div>
-        <Button variant="gold">
+        <Button variant="gold" className="w-full sm:w-auto">
           <Plus className="h-4 w-4" />
           {actionLabel}
         </Button>
       </div>
 
-      <div className="rounded-[20px] border border-brown/10 bg-white p-4 shadow-sm">
+      <div className="rounded-[20px] border border-brown/10 bg-white p-3 shadow-sm sm:p-4">
         <div className="relative mb-4 max-w-md">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-brown/40" />
           <input
@@ -49,8 +49,27 @@ export function AdminModulePage({
           />
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[640px] text-left text-sm">
+        <ul className="space-y-3 md:hidden">
+          {rows.map((row, i) => {
+            const [first, ...rest] = columns
+            return (
+              <li key={i} className="rounded-2xl border border-brown/10 bg-beige/40 p-4">
+                <p className="font-semibold text-ink">{row[first.key]}</p>
+                <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm">
+                  {rest.map((col) => (
+                    <div key={col.key} className="contents">
+                      <dt className="text-xs uppercase tracking-wide text-brown/55">{col.label}</dt>
+                      <dd className="min-w-0 break-words text-right text-ink/90">{row[col.key]}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </li>
+            )
+          })}
+        </ul>
+
+        <div className="hidden overflow-x-auto md:block">
+          <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-brown/10 text-xs uppercase tracking-wide text-brown/55">
                 {columns.map((col) => (

@@ -1,6 +1,7 @@
 import { Star } from 'lucide-react'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import { Autoplay, Pagination } from 'swiper/modules'
+import { Bi, SectionHeading } from '@/components/Bi'
 import { Reveal } from '@/components/Reveal'
 import { testimonials } from '@/data/content'
 import 'swiper/css'
@@ -11,18 +12,18 @@ export function Testimonials() {
     <section id="temoignages" className="bg-beige py-16 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
         <Reveal>
-          <p className="text-center text-xs font-semibold uppercase tracking-[0.25em] text-brown">
-            Avis clients
-          </p>
-          <h2 className="mt-3 text-center font-display text-3xl text-green sm:text-4xl lg:text-5xl">
-            Ils nous font confiance
-          </h2>
+          <SectionHeading
+            eyebrowAr="آراء الزبناء"
+            eyebrow="Avis clients"
+            titleAr="يثقون بنا"
+            title="Ils nous font confiance"
+          />
         </Reveal>
 
         <Reveal className="mt-12" delay={0.1}>
           <Swiper
             modules={[Autoplay, Pagination]}
-            autoplay={{ delay: 4500, disableOnInteraction: false }}
+            autoplay={{ delay: 6000, disableOnInteraction: false }}
             pagination={{ clickable: true }}
             spaceBetween={24}
             breakpoints={{
@@ -33,16 +34,24 @@ export function Testimonials() {
             className="!pb-12"
           >
             {testimonials.map((t) => (
-              <SwiperSlide key={t.id}>
-                <article className="flex h-full flex-col rounded-[20px] bg-white p-7 shadow-[0_12px_40px_rgba(16,16,16,0.06)]">
+              <SwiperSlide key={t.id} className="!h-auto">
+                <article
+                  dir="rtl"
+                  className="flex h-full flex-col rounded-[20px] bg-white p-6 shadow-[0_12px_40px_rgba(16,16,16,0.06)] sm:p-7"
+                >
                   <div className="mb-4 flex gap-1 text-gold">
                     {Array.from({ length: t.rating }).map((_, i) => (
                       <Star key={i} className="h-4 w-4 fill-gold" />
                     ))}
                   </div>
-                  <p className="flex-1 font-display text-lg italic leading-relaxed text-ink/90">
-                    “{t.comment}”
-                  </p>
+                  <div className="flex-1">
+                    <p lang="ar" className="font-display text-xl leading-relaxed text-ink">
+                      «{t.commentAr}»
+                    </p>
+                    <p lang="fr" className="mt-3 font-display text-base italic leading-relaxed text-ink/70">
+                      <span dir="ltr">“{t.comment}”</span>
+                    </p>
+                  </div>
                   <div className="mt-6 flex items-center gap-3">
                     <img
                       src={t.photo}
@@ -52,7 +61,9 @@ export function Testimonials() {
                     />
                     <div>
                       <p className="font-semibold text-ink">{t.name}</p>
-                      <p className="text-xs text-brown/70">{t.role}</p>
+                      <p className="text-xs text-brown/70">
+                        <Bi ar={t.roleAr} fr={t.role} frClassName="mt-0 text-[1em]" />
+                      </p>
                     </div>
                   </div>
                 </article>

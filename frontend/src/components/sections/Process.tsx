@@ -1,3 +1,4 @@
+import { Bi, SectionHeading } from '@/components/Bi'
 import { Reveal } from '@/components/Reveal'
 import { processSteps } from '@/data/content'
 
@@ -6,12 +7,12 @@ export function Process() {
     <section id="processus" className="bg-beige py-16 lg:py-24">
       <div className="mx-auto max-w-7xl px-4 lg:px-8">
         <Reveal>
-          <p className="text-center text-xs font-semibold uppercase tracking-[0.25em] text-brown">
-            Comment ça marche
-          </p>
-          <h2 className="mt-3 text-center font-display text-3xl text-green sm:text-4xl lg:text-5xl">
-            Processus de commande
-          </h2>
+          <SectionHeading
+            eyebrowAr="كيف نشتغل"
+            eyebrow="Comment ça marche"
+            titleAr="مراحل الطلب"
+            title="Processus de commande"
+          />
         </Reveal>
 
         <div className="relative mt-14">
@@ -23,8 +24,12 @@ export function Process() {
                   <span className="mb-4 flex h-12 w-12 items-center justify-center rounded-full border-2 border-gold bg-beige font-display text-lg font-bold text-green">
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <h3 className="font-display text-lg text-ink">{step.title}</h3>
-                  <p className="mt-2 text-xs leading-relaxed text-brown/70">{step.description}</p>
+                  <h3 className="font-display text-lg font-bold text-ink">
+                    <Bi ar={step.titleAr} fr={step.title} frClassName="text-[0.8em] font-semibold" />
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-brown/75">
+                    <Bi ar={step.descriptionAr} fr={step.description} frClassName="text-[0.85em]" />
+                  </p>
                 </li>
               </Reveal>
             ))}
